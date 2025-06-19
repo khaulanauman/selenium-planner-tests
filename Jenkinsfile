@@ -1,20 +1,20 @@
 pipeline {
-    agent {
-        docker {
-            image 'markhobson/maven-chrome'
-        }
-    }
+    agent any
 
     stages {
-        stage('Clone Test Repo') {
+        stage('Clone Code') {
             steps {
                 git 'https://github.com/khaulanauman/selenium-planner-tests'
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Selenium Tests') {
             steps {
-                sh 'mvn test'
+                script {
+                    docker.image('markhobson/maven-chrome').inside {
+                        sh 'mvn test'
+                    }
+                }
             }
         }
     }
